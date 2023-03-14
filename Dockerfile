@@ -23,6 +23,11 @@ RUN echo "package to build: ${package}"
 COPY . .
 RUN rustc --version
 RUN cargo --version
+#RUN export http_proxy="http://proxy-ss.patsnap.info:8118"
+#RUN export https_proxy="http://proxy-ss.patsnap.info:8118"
+#RUN apk add git
+#RUN git clone https://github.com/patsnapops/busylib.git
+#RUN export CARGO_NET_GIT_FETCH_WITH_CLI=true
 RUN cargo build --profile=release-with-debug --all-features -p ${package}
 RUN ls -lh ./target/release-with-debug
 
