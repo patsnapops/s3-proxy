@@ -8,11 +8,6 @@ inherits = "release"
 debug = true
 
 [dependencies]
-piam-core = { git = "http://git.patsnap.com/devops/security/piam.git" }
-piam-proxy = { git = "http://git.patsnap.com/devops/security/piam.git", features = ["aws-xml-response", "prefilter", "tencent-signature"] }
-piam-object-storage = { git = "http://git.patsnap.com/devops/security/piam.git", features = ["cos-parser"] }
-patsnap-constants = { git = "http://git.patsnap.com/devops/patsnap-constants.git" }
-busylib = { git = "https://github.com/patsnapops/busylib.git", version = "0.1.0" }
 axum = { version = "0.6.1" }
 hyper = { version = "0.14", features = ["full"] }
 tokio = { version = "1", features = ["full"] }
@@ -22,6 +17,28 @@ serde = { version = "1.0", features = ["derive"] }
 arc-swap = "1.5.1"
 once_cell = "1.15.0"
 async-trait = "0.1"
+
+[dependencies.patsnap-constants]
+git = "http://git.patsnap.com/devops/patsnap-constants.git"
+
+[dependencies.piam-core]
+git = "http://git.patsnap.com/devops/security/piam.git"
+#rev = "21678520"
+
+[dependencies.piam-proxy]
+git = "http://git.patsnap.com/devops/security/piam.git"
+features = ["aws-xml-response", "prefilter", "tencent-signature"]
+#rev = "21678520"
+
+[dependencies.piam-object-storage]
+git = "http://git.patsnap.com/devops/security/piam.git"
+features = ["cos-parser"]
+#rev = "21678520"
+
+[dependencies.busylib]
+git = "https://github.com/patsnapops/busylib.git"
+version = "0.1.0"
+#rev = "fecc4006"
 
 [dependencies.aws-smithy-async]
 version = "0.54.4"
