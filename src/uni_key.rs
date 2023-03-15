@@ -132,11 +132,17 @@ impl UniKeyInfo {
                         region: CN_NORTHWEST_1.to_string(),
                         endpoint: None,
                     }),
-                    id if id.starts_with("us_aws") => Ok(AccessInfo {
-                        account,
-                        region: US_EAST_1.to_string(),
-                        endpoint: None,
-                    }),
+                    id if id.starts_with("us_aws") => {
+                        let mut region = US_EAST_1.to_string();
+                        if id == "us_aws_cas_1549" {
+                            region = "us-east-2".to_string();
+                        };
+                        Ok(AccessInfo {
+                            account,
+                            region,
+                            endpoint: None,
+                        })
+                    },
                     id if id.starts_with("cn_tencent") => Ok(AccessInfo {
                         account,
                         region: AP_SHANGHAI.to_string(),

@@ -977,6 +977,42 @@ async fn zsz() {
 }
 
 #[tokio::test]
+async fn jl() {
+    let client = build_client_from_params(ClientParams {
+        access_key: "AKPSPERS02JL00Z",
+        secret: "",
+        region: CN_NORTHWEST_1,
+        endpoint: EP_S3_PROXY_DEV,
+    });
+
+    // let output = client
+    //     .head_bucket()
+    //     .bucket("patsnap-country-source")
+    //     .send()
+    //     .await
+    //     .unwrap();
+    // dbg!(&output);
+
+    let output = client
+        .head_bucket()
+        .bucket("dev-storage-warehouse-patsnap-us-east-2")
+        // .bucket("landscape-image-us-west-1")
+        .send()
+        .await
+        .unwrap();
+    dbg!(&output);
+
+    let object_output = client
+        .get_object()
+        .bucket("dev-storage-warehouse-patsnap-us-east-2")
+        .key("poc/delta_lake/dws_patent_publication_rt_test/_delta_log/00000000000000000000.json")
+        .send()
+        .await
+        .unwrap();
+    dbg!(&object_output.e_tag());
+}
+
+#[tokio::test]
 async fn test_9554() {
     let client = build_client_from_params(ClientParams {
         access_key: "AKPSSVCS04OPST",

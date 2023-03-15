@@ -1336,7 +1336,7 @@ checksum = "478c572c3d73181ff3c2539045f6eb99e5491218eae919370993b890cdbdd98e"
 [[package]]
 name = "piam-core"
 version = "0.1.0"
-source = "git+http://git.patsnap.com/devops/security/piam.git#21678520a04d8628d71f5790d000920218e424af"
+source = "git+http://git.patsnap.com/devops/security/piam.git#c716443e7fff90885efe12cf07300236a020f148"
 dependencies = [
  "busylib",
  "cidr",
@@ -1348,7 +1348,7 @@ dependencies = [
 [[package]]
 name = "piam-object-storage"
 version = "0.1.0"
-source = "git+http://git.patsnap.com/devops/security/piam.git#21678520a04d8628d71f5790d000920218e424af"
+source = "git+http://git.patsnap.com/devops/security/piam.git#c716443e7fff90885efe12cf07300236a020f148"
 dependencies = [
  "busylib",
  "http",
@@ -1362,7 +1362,7 @@ dependencies = [
 [[package]]
 name = "piam-proxy"
 version = "0.1.0"
-source = "git+http://git.patsnap.com/devops/security/piam.git#21678520a04d8628d71f5790d000920218e424af"
+source = "git+http://git.patsnap.com/devops/security/piam.git#c716443e7fff90885efe12cf07300236a020f148"
 dependencies = [
  "arc-swap",
  "async-trait",
