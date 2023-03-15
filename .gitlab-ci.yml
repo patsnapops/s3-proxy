@@ -153,6 +153,7 @@ deploy_s3_proxy_local:
     PROJECT_NAME: "s3-proxy"
     REGION: local
     GIT_STRATEGY: none
+    HC_PER_SEC: "120"
   before_script:
     - echo $image
   script:
