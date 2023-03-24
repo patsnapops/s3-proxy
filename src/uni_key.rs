@@ -142,7 +142,7 @@ impl UniKeyInfo {
                             region,
                             endpoint: None,
                         })
-                    },
+                    }
                     id if id.starts_with("cn_tencent") => Ok(AccessInfo {
                         account,
                         region: AP_SHANGHAI.to_string(),

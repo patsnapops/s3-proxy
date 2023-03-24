@@ -81,18 +81,20 @@ pub async fn handle(
     debug!("req.uri '{}'", req.uri());
     debug!("req.method {}", req.method());
     debug!("req.headers {:#?}", req.headers());
+    req.validate()?;
 
     let state = state.load();
 
     // Get input structure by parsing the request for specific protocol.
     // Example: getting S3Input with bucket and key as its fields.
     let s3_config = &state.extended_config;
-    let input = ObjectStorageInput::from(&req, &s3_config.proxy_hosts)
-        .map_err(from_parser_into_proxy_error)?;
+    let (input, req) = ObjectStorageInput::parse(req, &s3_config.proxy_hosts)
+        .await
+        .map_err(from_parser_into_proxy_error)?
+        .into_parts();
 
     let iam_container = &state.iam_container;
 
-    req.validate()?;
     // aws sigv4 specific
     #[allow(unused)]
     let (access_key, region) = req.extract_access_key_and_region()?;
@@ -126,12 +128,12 @@ pub async fn handle(
 
     // Apply user input effects that finding in policies
     let user_input_effects = policies.user_input.find_effects(&input)?;
-    let mut raw_req = req.apply_effects(user_input_effects)?;
+    let mut req = req.apply_effects(user_input_effects)?;
 
     // Sign and forward
-    raw_req.set_actual_host(s3_config, region)?;
+    req.set_actual_host(s3_config, region)?;
     let sign_params = AwsSigv4SignParams::new_with(account, SERVICE, region);
-    let signed_req = raw_req
+    let signed_req = req
         .sign_with_aws_sigv4_params(&sign_params)
         .await
         .ex("sign should not fail");
