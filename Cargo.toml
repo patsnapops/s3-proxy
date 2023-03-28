@@ -22,18 +22,18 @@ async-trait = "0.1"
 git = "http://git.patsnap.com/devops/patsnap-constants.git"
 
 [dependencies.piam-core]
-git = "http://git.patsnap.com/devops/security/piam.git"
+git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-core"
 #rev = "c716443e"
 
 [dependencies.piam-proxy]
-git = "http://git.patsnap.com/devops/security/piam.git"
+git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-proxy"
 features = ["aws-xml-response", "prefilter", "tencent-signature"]
 #rev = "c716443e"
 
 [dependencies.piam-object-storage]
-git = "http://git.patsnap.com/devops/security/piam.git"
+git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-object-storage"
 features = ["cos-parser"]
 #rev = "c716443e"
