@@ -24,19 +24,19 @@ git = "http://git.patsnap.com/devops/patsnap-constants.git"
 [dependencies.piam-core]
 git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-core"
-#rev = "c716443e"
+rev = "147af7a6"
 
 [dependencies.piam-proxy]
 git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-proxy"
 features = ["aws-xml-response", "prefilter", "tencent-signature"]
-#rev = "c716443e"
+rev = "147af7a6"
 
 [dependencies.piam-object-storage]
 git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-object-storage"
 features = ["cos-parser"]
-#rev = "c716443e"
+rev = "147af7a6"
 
 [dependencies.busylib]
 git = "https://github.com/patsnapops/busylib.git"
