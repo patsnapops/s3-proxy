@@ -22,21 +22,21 @@ async-trait = "0.1"
 git = "http://git.patsnap.com/devops/patsnap-constants.git"
 
 [dependencies.piam-core]
-git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-core"
-rev = "147af7a6"
+git = "https://github.com/patsnapops/piam.git"
+rev = "f4770e0c072757b214fcd42118a167f44f298bb3"
 
 [dependencies.piam-proxy]
-git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-proxy"
+git = "https://github.com/patsnapops/piam.git"
+rev = "f4770e0c072757b214fcd42118a167f44f298bb3"
 features = ["aws-xml-response", "prefilter", "tencent-signature"]
-rev = "147af7a6"
 
 [dependencies.piam-object-storage]
-git = "https://github.com/patsnapops/piam.git"
 #path = "../../security/piam/crates/piam-object-storage"
+git = "https://github.com/patsnapops/piam.git"
+rev = "f4770e0c072757b214fcd42118a167f44f298bb3"
 features = ["cos-parser"]
-rev = "147af7a6"
 
 [dependencies.busylib]
 git = "https://github.com/patsnapops/busylib.git"
@@ -44,25 +44,25 @@ version = "0.1.0"
 #rev = "fecc4006"
 
 [dependencies.aws-smithy-async]
-version = "0.54.4"
+version = "0.55.0"
 optional = true
 
 [dependencies.aws-sdk-s3]
-version = "0.24.0"
+version = "0.25.0"
 optional = true
 
 [dependencies.aws-types]
-version = "0.54.1"
+version = "0.55.0"
 optional = true
 
 [dependencies.aws-credential-types]
-version = "0.54.1"
+version = "0.55.0"
 features = ["hardcoded-credentials"]
 optional = true
 
 [dev-dependencies]
-aws-config = "0.54.1"
-aws-smithy-client = "0.54.4"
+aws-config = "0.55.0"
+aws-smithy-client = "0.55.0"
 futures = "0.3.24"
 
 [dev-dependencies.uuid]

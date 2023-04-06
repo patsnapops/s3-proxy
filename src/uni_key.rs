@@ -7,7 +7,8 @@ use std::{
     time::Duration,
 };
 
-use aws_sdk_s3::{config::timeout::TimeoutConfig, Client, Config, Credentials};
+use aws_credential_types::Credentials;
+use aws_sdk_s3::{config::timeout::TimeoutConfig, Client, Config};
 use aws_smithy_async::rt::sleep::TokioSleep;
 use aws_types::region::Region;
 use busylib::{

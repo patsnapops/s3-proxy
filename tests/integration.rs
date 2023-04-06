@@ -1,12 +1,12 @@
 #![allow(unused)]
 
 use aws_config::{from_env, provider_config::ProviderConfig};
+use aws_credential_types::Credentials;
 use aws_sdk_s3::{
-    error::HeadObjectError,
-    model::{CompletedMultipartUpload, CompletedPart, Object},
-    output::HeadObjectOutput,
-    types::{ByteStream, SdkError},
-    Client, Config, Credentials,
+    error::ProvideErrorMetadata,
+    primitives::ByteStream,
+    types::{CompletedMultipartUpload, CompletedPart, Object},
+    Client, Config,
 };
 use aws_smithy_client::{erase::DynConnector, never::NeverConnector};
 use aws_types::{os_shim_internal::Env, region::Region};
