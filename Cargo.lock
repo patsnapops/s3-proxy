@@ -1324,8 +1324,8 @@ checksum = "478c572c3d73181ff3c2539045f6eb99e5491218eae919370993b890cdbdd98e"
 
 [[package]]
 name = "piam-core"
-version = "0.1.0"
-source = "git+https://github.com/patsnapops/piam.git?rev=f4770e0c072757b214fcd42118a167f44f298bb3#f4770e0c072757b214fcd42118a167f44f298bb3"
+version = "0.20.3"
+source = "git+https://github.com/patsnapops/piam.git#8eb0b2cc9f100126582b96ad01e12ca6f4b60d30"
 dependencies = [
  "busylib",
  "cidr",
@@ -1336,8 +1336,8 @@ dependencies = [
 
 [[package]]
 name = "piam-object-storage"
-version = "0.1.0"
-source = "git+https://github.com/patsnapops/piam.git?rev=f4770e0c072757b214fcd42118a167f44f298bb3#f4770e0c072757b214fcd42118a167f44f298bb3"
+version = "0.20.3"
+source = "git+https://github.com/patsnapops/piam.git#8eb0b2cc9f100126582b96ad01e12ca6f4b60d30"
 dependencies = [
  "busylib",
  "http",
@@ -1352,8 +1352,8 @@ dependencies = [
 
 [[package]]
 name = "piam-proxy"
-version = "0.1.0"
-source = "git+https://github.com/patsnapops/piam.git?rev=f4770e0c072757b214fcd42118a167f44f298bb3#f4770e0c072757b214fcd42118a167f44f298bb3"
+version = "0.20.3"
+source = "git+https://github.com/patsnapops/piam.git#8eb0b2cc9f100126582b96ad01e12ca6f4b60d30"
 dependencies = [
  "arc-swap",
  "async-trait",
