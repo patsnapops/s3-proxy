@@ -62,9 +62,26 @@ deploy_s3_proxy_us_aws_prod:
   tags:
     - aws
     - docker
-#  when: manual
+  #  when: manual
   variables:
     ENV: prod
+    PROJECT_NAME: "s3-proxy"
+    REGION: us-east-1
+    K8STYPE: eks
+    GIT_STRATEGY: none
+  before_script:
+    - echo $image
+  script:
+    - ops_deploy deploy
+
+deploy_s3_proxy_us_aws_data_prod:
+  stage: deploy
+  tags:
+    - aws
+    - docker
+  #  when: manual
+  variables:
+    ENV: dataprod
     PROJECT_NAME: "s3-proxy"
     REGION: us-east-1
     K8STYPE: eks
