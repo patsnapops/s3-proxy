@@ -97,9 +97,7 @@ mod test {
         assert_eq!(result, "datalake-internal.patsnap.com-cn-northwest-1");
         let result = config
             .proxy_hosts
-            .find_proxy_host(
-                "datalake-internal.patsnap.com.us-east-1.s3-proxy.patsnap.info",
-            )
+            .find_proxy_host("datalake-internal.patsnap.com.us-east-1.s3-proxy.patsnap.info")
             .unwrap();
         assert_eq!(result, "datalake-internal.patsnap.com");
     }

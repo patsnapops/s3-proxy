@@ -1,6 +1,6 @@
 [package]
 name = "s3-proxy"
-version = "0.1.0"
+version = "1.2.1"
 edition = "2021"
 
 [profile.release-with-debug]
@@ -24,18 +24,18 @@ git = "http://git.patsnap.com/devops/patsnap-constants.git"
 [dependencies.piam-core]
 #path = "../../security/piam/crates/piam-core"
 git = "https://github.com/patsnapops/piam.git"
-version = "0.20.3"
+version = "0.21.0"
 
 [dependencies.piam-proxy]
 #path = "../../security/piam/crates/piam-proxy"
 git = "https://github.com/patsnapops/piam.git"
-version = "0.20.3"
+version = "0.21.0"
 features = ["aws-xml-response", "prefilter", "tencent-signature"]
 
 [dependencies.piam-object-storage]
 #path = "../../security/piam/crates/piam-object-storage"
 git = "https://github.com/patsnapops/piam.git"
-version = "0.20.3"
+version = "0.21.0"
 features = ["cos-parser"]
 
 [dependencies.busylib]

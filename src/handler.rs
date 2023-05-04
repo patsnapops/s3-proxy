@@ -11,13 +11,16 @@ use busylib::{
 use http::{Response, StatusCode};
 use hyper::Body;
 use log::debug;
-use piam_core::condition::input::{Condition, ConditionCtx};
+use piam_core::{
+    account::aws::AwsAccount,
+    condition::input::{Condition, ConditionCtx},
+};
 use piam_object_storage::{input::ObjectStorageInput, policy::ObjectStoragePolicy};
 use piam_proxy::{
-    container::PolicyFilterParams,
+    container::{FoundPolicies, IamContainer, PolicyFilterParams},
     error::ProxyResult,
     policy::FindEffect,
-    request::{forward, HttpRequestExt},
+    request::{forward, AccessTarget, HttpRequestExt},
     response::HttpResponseExt,
     signature::{
         aws::{AwsSigv4, AwsSigv4SignParams},
@@ -78,67 +81,112 @@ pub async fn handle(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     req: HttpRequest,
 ) -> ProxyResult<HttpResponse> {
-    debug!("req.uri '{}'", req.uri());
-    debug!("req.method {}", req.method());
-    debug!("req.headers {:#?}", req.headers());
+    log(&req);
     req.validate()?;
 
     let state = state.load();
-
-    // Get input structure by parsing the request for specific protocol.
-    // Example: getting S3Input with bucket and key as its fields.
     let s3_config = &state.extended_config;
+    let iam_container = &state.iam_container;
+
     let (input, req) = ObjectStorageInput::parse(req, &s3_config.proxy_hosts)
         .await
         .map_err(from_parser_into_proxy_error)?
         .into_parts();
 
-    let iam_container = &state.iam_container;
+    let (access_target, base_access_key) =
+        get_access_params(iam_container, s3_config, &input, &req)?;
+    let policies = find_matching_policies(&access_target, &base_access_key, iam_container)?;
+    let req = apply_policies_to_req(addr, &input, policies, req)?;
+    let signed_req = sign(s3_config, access_target, req).await?;
+    let res = forward(signed_req, &state.http_client).await?;
+    Ok(res.add_piam_headers_with_random_id())
+}
 
+fn log(req: &HttpRequest) {
+    debug!("req.uri '{}'", req.uri());
+    debug!("req.method {}", req.method());
+    debug!("req.headers {:#?}", req.headers());
+}
+
+fn get_access_params(
+    iam_container: &IamContainer<ObjectStoragePolicy>,
+    s3_config: &S3Config,
+    input: &ObjectStorageInput,
+    req: &HttpRequest,
+) -> ProxyResult<(AccessTarget, String)> {
     // aws sigv4 specific
     #[allow(unused)]
     let (access_key, region) = req.extract_access_key_and_region()?;
     // When feature uni-key is enabled, base_access_key is aws access_key,
     // otherwise base_access_key + account_code = aws_access_key
     #[cfg(feature = "uni-key")]
-    let (account, region, base_access_key) = {
+    let (access_target, base_access_key) = {
         let access_info = s3_config
             .get_uni_key_info()?
             .find_access_info(&input, region)?;
-        (&access_info.account, &access_info.region, access_key)
+        (
+            AccessTarget {
+                account: access_info.account.clone(),
+                region: access_info.region.clone(),
+            },
+            access_key,
+        )
     };
     #[cfg(not(feature = "uni-key"))]
-    let (account, base_access_key) = {
+    let (access_target, base_access_key) = {
         use piam_proxy::signature::split_to_base_and_account_code;
         let (base_access_key, code) = split_to_base_and_account_code(access_key)?;
         let account = iam_container.find_account_by_code(code)?;
-        (account, base_access_key)
+        (
+            AccessTarget {
+                account: account.clone(),
+                region: region.to_string(),
+            },
+            base_access_key,
+        )
     };
+    Ok((access_target, base_access_key.to_string()))
+}
 
-    // Find matching policies
+fn find_matching_policies<'a>(
+    access_target: &AccessTarget,
+    base_access_key: &str,
+    iam_container: &'a IamContainer<ObjectStoragePolicy>,
+) -> ProxyResult<FoundPolicies<'a, ObjectStoragePolicy>> {
     let user = iam_container.find_user_by_base_access_key(base_access_key)?;
     let groups = iam_container.find_groups_by_user(user)?;
-    let policy_filter_param = PolicyFilterParams::new_with(account, region).groups(&groups);
+    let policy_filter_param =
+        PolicyFilterParams::new_with(&access_target.account, &access_target.region).groups(&groups);
     let policies = iam_container.find_policies(&policy_filter_param)?;
+    Ok(policies)
+}
 
-    // Apply conditional effects that finding in policies
+fn apply_policies_to_req(
+    addr: SocketAddr,
+    input: &ObjectStorageInput,
+    policies: FoundPolicies<ObjectStoragePolicy>,
+    req: HttpRequest,
+) -> ProxyResult<HttpRequest> {
     let condition_ctx = ConditionCtx::default().from(Condition::new_with_addr(addr));
     let condition_effects = policies.condition.find_effects(&condition_ctx)?;
     let req = req.apply_effects(condition_effects)?;
 
-    // Apply user input effects that finding in policies
     let user_input_effects = policies.user_input.find_effects(&input)?;
     let mut req = req.apply_effects(user_input_effects)?;
+    Ok(req)
+}
 
-    // Sign and forward
-    req.set_actual_host(s3_config, region)?;
-    let sign_params = AwsSigv4SignParams::new_with(account, SERVICE, region);
+async fn sign(
+    s3_config: &S3Config,
+    access_target: AccessTarget,
+    mut req: HttpRequest,
+) -> ProxyResult<HttpRequest> {
+    req.set_actual_host(s3_config, &access_target.region)?;
+    let sign_params =
+        AwsSigv4SignParams::new_with(&access_target.account, SERVICE, &access_target.region);
     let signed_req = req
         .sign_with_aws_sigv4_params(&sign_params)
         .await
         .ex("sign should not fail");
-    let res = forward(signed_req, &state.http_client).await?;
-
-    // add tracing info
-    Ok(res.add_piam_headers_with_random_id())
+    Ok(signed_req)
 }
