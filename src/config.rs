@@ -71,34 +71,3 @@ pub fn features() -> String {
     list.push(']');
     list
 }
-
-#[cfg(test)]
-mod test {
-    use piam_object_storage::config::HostDomains;
-
-    #[test]
-    fn find_proxy_host() {
-        let config = crate::config::S3Config {
-            proxy_hosts: HostDomains {
-                domains: vec![
-                    "cn-northwest-1.s3-proxy.patsnap.info".into(),
-                    "us-east-1.s3-proxy.patsnap.info".into(),
-                ],
-            },
-            #[cfg(feature = "uni-key")]
-            uni_key_info: None,
-        };
-        let result = config
-            .proxy_hosts
-            .find_proxy_host(
-                "datalake-internal.patsnap.com-cn-northwest-1.cn-northwest-1.s3-proxy.patsnap.info",
-            )
-            .unwrap();
-        assert_eq!(result, "datalake-internal.patsnap.com-cn-northwest-1");
-        let result = config
-            .proxy_hosts
-            .find_proxy_host("datalake-internal.patsnap.com.us-east-1.s3-proxy.patsnap.info")
-            .unwrap();
-        assert_eq!(result, "datalake-internal.patsnap.com");
-    }
-}

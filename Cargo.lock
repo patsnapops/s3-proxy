@@ -1309,7 +1309,7 @@ dependencies = [
 [[package]]
 name = "patsnap-constants"
 version = "0.1.0"
-source = "git+http://git.patsnap.com/devops/patsnap-constants.git#05362cf39d306bbc9c2085cfd933f61f6bdf22b1"
+source = "will be open sourced soon"
 dependencies = [
  "serde",
  "strum",
