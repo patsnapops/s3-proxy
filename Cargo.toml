@@ -19,7 +19,7 @@ once_cell = "1.15.0"
 async-trait = "0.1"
 
 [dependencies.patsnap-constants]
-git = "http://git.patsnap.com/devops/patsnap-constants.git"
+git = "will be open sourced soon"
 
 [dependencies.piam-core]
 #path = "../../security/piam/crates/piam-core"
